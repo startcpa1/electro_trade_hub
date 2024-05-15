@@ -1,18 +1,27 @@
 from rest_framework import serializers
 
-from networks.models import Factory
+from networks.models import Factory, RetailNetwork, IndividualEntrepreneur
 
 
-class SupplierSerializer(serializers.ModelSerializer):
-    """Базовый сериализатор для моделей"""
+class FactorySupplierSerializer(serializers.ModelSerializer):
+    """Сериализатор для моделей фабрики"""
 
     class Meta:
         model = Factory
         fields = '__all__'
 
 
-def get_supplier_serializer(model_class):
-    class Meta:
-        model = model_class
+class RetailSupplierSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели """
 
-    return type(f"{model_class.__name__}Serializer", (SupplierSerializer,), {'Meta': Meta})
+    class Meta:
+        model = RetailNetwork
+        fields = '__all__'
+
+
+class EntrepreneurSupplierSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели """
+
+    class Meta:
+        model = IndividualEntrepreneur
+        fields = '__all__'
