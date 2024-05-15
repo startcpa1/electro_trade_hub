@@ -18,7 +18,7 @@ class NetworkNodeAdmin(admin.ModelAdmin):
 class FactoryAdmin(NetworkNodeAdmin):
     list_display = ('name', 'country', 'city', 'get_supplier_name', 'debt')
 
-    # list_display_links = ['get_supplier_name']
+    list_display_links = ['get_supplier_name']
 
     def get_supplier_name(self, obj):
         return obj.supplier.name if obj.supplier else None
@@ -44,7 +44,7 @@ class RetailNetworkAdmin(NetworkNodeAdmin):
 class IndividualEntrepreneurAdmin(NetworkNodeAdmin):
     list_display = ('name', 'country', 'city', 'get_supplier_name', 'debt',)
 
-    # list_display_links = ['get_supplier_name']
+    list_display_links = ['get_supplier_name']
 
     def get_supplier_name(self, obj):
         return obj.supplier.name if obj.supplier else None
