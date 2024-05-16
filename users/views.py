@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from users.models import Employee
-from users.permissions import IsProfileUser
+from users.permissions import UserIsActive
 from users.serializers import EmployeeSerializer
 
 
@@ -10,6 +10,7 @@ class EmployeeListView(generics.ListAPIView):
     """Представление информации списка пользователей"""
     serializer_class = EmployeeSerializer
     queryset = Employee.objects.all()
+    permission_classes = [UserIsActive]
 
 
 class EmployeeCreateView(generics.CreateAPIView):
@@ -35,16 +36,17 @@ class EmployeeUpdateView(generics.UpdateAPIView):
     """Представление для обновления информации о пользователе"""
     serializer_class = EmployeeSerializer
     queryset = Employee.objects.all()
-    permission_classes = [IsProfileUser]
+    permission_classes = [UserIsActive]
 
 
 class EmployeeDetailView(generics.RetrieveAPIView):
     """Представление для получения информации о пользователе"""
     serializer_class = EmployeeSerializer
     queryset = Employee.objects.all()
+    permission_classes = [UserIsActive]
 
 
 class EmployeeDeleteView(generics.DestroyAPIView):
     """Представление для удаления информации о пользователе"""
     queryset = Employee.objects.all()
-    permission_classes = [IsProfileUser]
+    permission_classes = [UserIsActive]

@@ -9,6 +9,8 @@ class FactorySupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = Factory
         fields = '__all__'
+        read_only_fields = ['debt']
+        filter_fields = ['country']
 
 
 class RetailSupplierSerializer(serializers.ModelSerializer):
@@ -17,6 +19,8 @@ class RetailSupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = RetailNetwork
         fields = '__all__'
+        read_only_fields = ['debt']
+        filter_fields = ['country']
 
 
 class EntrepreneurSupplierSerializer(serializers.ModelSerializer):
@@ -25,3 +29,5 @@ class EntrepreneurSupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = IndividualEntrepreneur
         fields = '__all__'
+        read_only_fields = ['debt']
+        filter_fields = ['country']
