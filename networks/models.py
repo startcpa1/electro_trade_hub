@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
+from products.models import Product
+
 NULLABLE = {'blank': True,
             'null': True,
             }
@@ -21,6 +23,7 @@ class NetworkNode(models.Model):
     city = models.CharField(max_length=100, verbose_name='Город', **NULLABLE)
     street = models.CharField(max_length=100, verbose_name='Улица', **NULLABLE)
     house_number = models.CharField(max_length=10, verbose_name='Номер дома', **NULLABLE)
+    products = models.ManyToManyField(Product, related_name='network_nodes', verbose_name="Продукты")
 
     supplier = models.ForeignKey('self', on_delete=models.SET_NULL, **NULLABLE, verbose_name='Поставщик')
     debt = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Задолженность(Руб)')
