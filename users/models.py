@@ -15,6 +15,8 @@ class Employee(AbstractUser):
     last_name = models.CharField(max_length=50, verbose_name='Фамилия пользователя', null=True, blank=True)
     phone = models.CharField(max_length=20, verbose_name='Номер телефона', null=True, blank=True)
     image = models.ImageField(upload_to='users/', verbose_name='аватар', null=True, blank=True)
+    is_active = models.BooleanField(default=False, verbose_name="Active")
+    supplier = models.BooleanField(default=False, verbose_name="поставщик")
 
     role = models.CharField(max_length=15, verbose_name='роль', choices=UserRole.choices, default=UserRole.MEMBER)
 
@@ -27,3 +29,4 @@ class Employee(AbstractUser):
     class Meta:
         verbose_name = 'пользователь'
         verbose_name_plural = 'пользователи'
+        ordering = ['is_active', ]

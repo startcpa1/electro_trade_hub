@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 NULLABLE = {'blank': True,
             'null': True,
@@ -7,6 +9,12 @@ NULLABLE = {'blank': True,
 
 class NetworkNode(models.Model):
     """Создаем класс сети электроники"""
+    LEVEL_CHOICES = (
+        (0, 'Завод'),
+        (1, 'Розничная сеть'),
+        (2, 'Индивидуальный предприниматель'),
+    )
+
     name = models.CharField(max_length=100, verbose_name='Название', **NULLABLE)
     email = models.EmailField(verbose_name='Email', **NULLABLE)
     country = models.CharField(max_length=100, verbose_name='Страна', **NULLABLE)
@@ -15,35 +23,23 @@ class NetworkNode(models.Model):
     house_number = models.CharField(max_length=10, verbose_name='Номер дома', **NULLABLE)
 
     supplier = models.ForeignKey('self', on_delete=models.SET_NULL, **NULLABLE, verbose_name='Поставщик')
-    debt = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Задолженность')
+    debt = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Задолженность(Руб)')
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
-
-    class Meta:
-        abstract = True
+    level = models.IntegerField(choices=LEVEL_CHOICES, **NULLABLE,
+                                verbose_name='Уровень')  # Добавляем поле для определения уровня иерархии
 
     def __str__(self):
-        return self.name
-
-
-class Factory(NetworkNode):
-    """Создаем класс завода"""
+        return f"{self.name}, {self.email}, {self.country}"
 
     class Meta:
-        verbose_name = 'завод'
-        verbose_name_plural = 'заводы'
+        verbose_name = 'звено сети'
+        verbose_name_plural = 'звенья сети'
 
 
-class RetailNetwork(NetworkNode):
-    """Создаем класс розничной сети"""
-
-    class Meta:
-        verbose_name = 'розничная сеть'
-        verbose_name_plural = 'розничные сети'
-
-
-class IndividualEntrepreneur(NetworkNode):
-    """Создаем класс индивидуального предпринимателя"""
-
-    class Meta:
-        verbose_name = 'индивидуальный предприниматель'
-        verbose_name_plural = 'индивидуальные предприниматели'
+@receiver(pre_save, sender=NetworkNode)
+def set_network_node_level(sender, instance, **kwargs):
+    if instance.supplier:
+        instance.level = instance.supplier.level + 1
+    else:
+        # Если у объекта нет поставщика, он считается заводом (уровень 0)
+        instance.level = 0
